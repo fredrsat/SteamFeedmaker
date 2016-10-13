@@ -12,7 +12,7 @@ const builder = require('xmlbuilder'),
       fs = require('fs');
 
 let getMatches = (string, regex, index) => {
-  index || (index = 1); // default to the first capturing group
+  index || (index = 1); 
   let matches = [], match;
   
   while (match = regex.exec(string))   {
@@ -56,8 +56,8 @@ module.exports = (userid, filepath) => {
               
               list.push({"item":{
                 title: $(url).text(), 
-                url: $(url).attr('href'),  
-                description: $(element).find('.body').text().trim()
+                description: $(element).find('.body').text().trim(),
+                link: $(url).attr('href')
               }}); 
             });
             resolve(appid);
@@ -71,7 +71,11 @@ module.exports = (userid, filepath) => {
       values => { 
         let feed = builder.create('rss')
             .att('version', '2.0')
-            .ele('channel') 
+            .ele('channel')
+              .ele('title', 'Game updates for user ' + userid).up()
+              .ele('description', 'Feed that consolidates all games updates for a given user').up()
+              .ele('link', 'http://127.0.0.1').up() 
+              .ele('lastBuildDate', new Date().toString()).up() 
               .ele(list)
             .end({ pretty: true});
 
