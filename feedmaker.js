@@ -57,7 +57,8 @@ module.exports = (userid, filepath) => {
               list.push({"item":{
                 title: $(url).text(), 
                 description: $(element).find('.body').text().trim(),
-                link: $(url).attr('href')
+                link: $(url).attr('href'),
+                pubDate:new Date($(element).find('div .date').text()).toUTCString()
               }}); 
             });
             resolve(appid);
@@ -75,7 +76,7 @@ module.exports = (userid, filepath) => {
               .ele('title', 'Game updates for user ' + userid).up()
               .ele('description', 'Feed that consolidates all games updates for a given user').up()
               .ele('link', 'http://127.0.0.1').up() 
-              .ele('lastBuildDate', new Date().toString()).up() 
+              .ele('lastBuildDate', new Date().toUTCString()).up() 
               .ele(list)
             .end({ pretty: true});
 
