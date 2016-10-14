@@ -89,14 +89,20 @@ module.exports = (userid, filepath, options) => {
               let $ = cheerio.load(body);
               $('#mainBlock').find('div .newsPostBlock').each( (index, element) => {
                 let url = $(element).find('.headline a');
-                
+                let date = $(element).find('div .date').text();
+                let description = $(element).find('.body').text().trim();
+
+                //Steam do not post the year on posts made in the current year, so it has to be added if this is the case
+                let fixedDate = new Date(date).getTime() < new Date(new Date().getFullYear()).getTime() 
+                ? new Date(date) : new Date(date + ' ' + new Date().getFullYear()).toString();
+                    
                 list.push({"item":{
                   title: $(url).text(), 
-                  description: $(element).find('.body').text().trim(),
+                  description: description,
                   link: $(url).attr('href'),
-                  //FIX:pubDate:new Date($(element).find('div .date').text()).toUTCString()
+                  pubdate: fixedDate                    
                 }}); 
-              });
+              });              
               resolve(appid);
             });
           })
@@ -117,10 +123,14 @@ module.exports = (userid, filepath, options) => {
                   .ele('title', 'Game updates for user ' + userid).up()
                   .ele('description', 'Feed that consolidates all games news/updates for a given user').up()
                   .ele('link', 'http://127.0.0.1').up() 
-                  .ele('lastBuildDate', new Date(now.getTime() + now.getTimezoneOffset()).toString()).up() //Fri, 14 Oct 2016 13:41:22 GMT
-                  .ele(list)
-                .end({ pretty: true});
+                  .ele('lastBuildDate', new Date(now.getTime() + now.getTimezoneOffset()).toString()).up() 
 
+                  //As the post have been read into the list async the list need to be sorted by publication date
+                  .ele(list.sort((a, b) => {
+                    return new Date(a.item.pubdate).getTime() < new Date(b.item.pubdate).getTime() ? 1 : -1;
+                  }))
+                .end({ pretty: true});
+                
               //Save RSS feed to file          
               fs.writeFile(filepath, feed, err => {
                 if(err)throw err;
@@ -157,4 +167,3 @@ module.exports = (userid, filepath, options) => {
     }
   );
 }
-
