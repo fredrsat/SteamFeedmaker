@@ -1,6 +1,6 @@
 /*
  *
- * Steam RSS maker by Procencephalon 
+ * Steam RSS maker by Fredrik Sætre 
  * 
  */ 
 
@@ -135,7 +135,7 @@ module.exports = (userid, filepath, options) => {
               fs.writeFile(filepath, feed, err => {
                 if(err)throw err;
     
-                console.log('RSS feed sucessfully created with filter: ' + (options.filter ? options.filter : 'none') );
+                console.log('RSS feed for user '+ userid + ' sucessfully created with filter: ' + (options.filter ? options.filter : 'none') );
               });
             }catch(err){
                 console.log('Error ' + err);  
