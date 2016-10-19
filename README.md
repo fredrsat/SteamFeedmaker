@@ -5,15 +5,16 @@ A RSS maker for Steam that creates a RSS file for all game and application updat
 
 Use concron.js in a local cronjob setup with the following usage:
 
-.arguments('<userid> <filepath>')
-  .usage('<userid> <filepath> [options]')
-  .option('-s, --save [filepath]', 'Saves game id\'s to file')
-  .option('-l, --load [filepath]', 'Loades id\'s from file and use it as source')
-  .option('-f, --filter [filter]', 'Defines filter to use on Steam news')  
+    .arguments('<userid> <filepath>')
+      .usage('<userid> <filepath> [options]')
+      .option('-s, --save [filepath]', 'Saves game id\'s to file')
+      .option('-l, --load [filepath]', 'Loades id\'s from file and use it as source')
+      .option('-f, --filter [filter]', 'Defines filter to use on Steam news')  
+
 
 Where userid is a user's steamcommunity id and filepath is the save path of the RSS file.
 
-### Possible filters for concron -f:
+### Possible filters for concron :
 * Announcements: "steam_announce" 
 * Client updates: "steam_client"
 * Press Releases: "steam_press"
@@ -24,6 +25,6 @@ Where userid is a user's steamcommunity id and filepath is the save path of the 
 For hosted use a node-cron library with feedmaker.js.
 
 ## Notes
-* Loads then ten latest updates pr game/application as presented by Steam
+The ten latest updates pr game/application is loaded as presented by Steam
 
 
