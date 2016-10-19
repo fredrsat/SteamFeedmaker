@@ -1,15 +1,16 @@
 /*
  *
- * Steam RSS maker by Fredrik Sætre 
+ * Steam RSS maker 
+ * Created by Fredrik Sætre 
  * 
  */ 
 
 'use strict';
 
 const builder = require('xmlbuilder'),
-      request = require('request'),
-      cheerio = require('cheerio'),
-      fs = require('fs');
+  request = require('request'),
+  cheerio = require('cheerio'),
+  fs = require('fs');
 
 /*
  * Helper function to sum up all matches of a regex
@@ -38,8 +39,10 @@ let getMatches = (string, regex, index) => {
  */
 
 module.exports = (userid, filepath, options) => { 
-  let list = [], promises = [], games = [],
-  filter = options.filter ? '&feed=' + options.filter : '';
+  let list = [], 
+    promises = [], 
+    games = [],
+    filter = options.filter ? '&feed=' + options.filter : '';
 
   //Find all games on the users public profile
   (new Promise ((resolve, reject) => {
@@ -88,19 +91,18 @@ module.exports = (userid, filepath, options) => {
 
               let $ = cheerio.load(body);
               $('#mainBlock').find('div .newsPostBlock').each( (index, element) => {
-                let url = $(element).find('.headline a');
-                let date = $(element).find('div .date').text();
-                let description = $(element).find('.body').text().trim();
-
-                //Steam do not post the year on posts made in the current year, so it has to be added if this is the case
-                let fixedDate = new Date(date).getTime() < new Date(new Date().getFullYear()).getTime() 
-                ? new Date(date) : new Date(date + ' ' + new Date().getFullYear()).toString();
-                    
+                let url = $(element).find('.headline a'),
+                  description = $(element).find('.body').text().trim(),
+                  date = $(element).find('div .date').text(), 
+                  z = Date.parse(date), y = new Date();
+                  
                 list.push({"item":{
                   title: $(url).text(), 
                   description: description,
                   link: $(url).attr('href'),
-                  pubdate: fixedDate                    
+
+                  //Handle the different rules that Steam use for presenting date (based on time since publication)                  
+                  pubdate: new Date((date ? z != z ? (y.getMonth()+1) + ' ' + y.getDate() : date : y ) + ' ' + y.getFullYear()).toString() 
                 }}); 
               });              
               resolve(appid);

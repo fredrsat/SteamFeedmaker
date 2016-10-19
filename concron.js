@@ -13,7 +13,7 @@ const program = require('commander');
 
 program
   .version('0.0.1')
-  .arguments('<userid> <filePathFeed>')
+  .arguments('<userid> <filepath>')
   .usage('<userid> <filepath> [options]')
   .option('-s, --save [filepath]', 'Saves game id\'s to file')
   .option('-l, --load [filepath]', 'Loades id\'s from file and use it as source')
