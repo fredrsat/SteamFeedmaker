@@ -1,7 +1,6 @@
 /*
  *
  * Steam RSS maker 
- * Created by Fredrik Sætre 
  * 
  */ 
 
@@ -24,6 +23,18 @@ let getMatches = (string, regex, index) => {
     matches.push(match[index]);
   }
   return matches;
+}
+
+/*
+ * Helper function to remove invalid symbols from string
+ */
+
+ let sanitizeString = (input) => {
+    let output = '';
+    for (let i = 0; i < input.length; i++) {
+      output += input.charCodeAt(i) <= 255 ? input.charAt(i) : ''
+    }
+    return output;
 }
 
 /*
@@ -92,7 +103,7 @@ module.exports = (userid, filepath, options) => {
               let $ = cheerio.load(body);
               $('#mainBlock').find('div .newsPostBlock').each( (index, element) => {
                 let url = $(element).find('.headline a'),
-                  description = $(element).find('.body').text().trim(),
+                  description = sanitizeString($(element).find('.body').text().trim()),
                   date = $(element).find('div .date').text(), 
                   z = Date.parse(date), y = new Date();
                   
@@ -124,8 +135,8 @@ module.exports = (userid, filepath, options) => {
                 .ele('channel')
                   .ele('title', 'Game updates for user ' + userid).up()
                   .ele('description', 'Feed that consolidates all games news/updates for a given user').up()
-                  .ele('link', 'http://127.0.0.1').up() 
-                  .ele('lastBuildDate', new Date(now.getTime() + now.getTimezoneOffset()).toString()).up() 
+                  .ele('link', 'http://store.steampowered.com/news/').up() 
+                  .ele('lastBuildDate', new Date(now.getTime()).toString()).up() 
 
                   //As the post have been read into the list async the list need to be sorted by publication date
                   .ele(list.sort((a, b) => {
@@ -140,8 +151,7 @@ module.exports = (userid, filepath, options) => {
                 console.log('RSS feed for user '+ userid + ' sucessfully created with filter: ' + (options.filter ? options.filter : 'none') );
               });
             }catch(err){
-                console.log('Error ' + err);  
-                return;
+                console.log(err);  
             }
           }else{
             console.log('Warning: RSS filepath not given or no results found');  
@@ -152,7 +162,6 @@ module.exports = (userid, filepath, options) => {
               fs.writeFile(options.save, games, err => {
               if(err) {
                 console.log('Error ' + err);
-                return;
               }
 
               console.log('Game id\'s saved sucessfully');

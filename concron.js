@@ -15,8 +15,8 @@ program
   .version('0.0.1')
   .arguments('<userid> <filepath>')
   .usage('<userid> <filepath> [options]')
-  .option('-s, --save [filepath]', 'Saves game id\'s to file')
-  .option('-l, --load [filepath]', 'Loades id\'s from file and use it as source')
+  .option('-s, --save [filepath]', 'Save game id\'s to file')
+  .option('-l, --load [filepath]', 'Load game id\'s from file and use it as source')
   .option('-f, --filter [filter]', 'Defines filter to use on Steam news')
   .action((userid, filepath, options) => {
 

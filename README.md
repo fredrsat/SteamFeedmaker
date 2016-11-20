@@ -7,9 +7,9 @@ Use concron.js in a local cronjob setup with the following usage:
 
     .arguments('<userid> <filepath>')
       .usage('<userid> <filepath> [options]')
-      .option('-s, --save [filepath]', 'Saves game id\'s to file')
-      .option('-l, --load [filepath]', 'Loades id\'s from file and use it as source')
-      .option('-f, --filter [filter]', 'Defines filter to use on Steam news')  
+      .option('-s, --save [filepath]', 'Save game id's to file')
+      .option('-l, --load [filepath]', 'Load game id's from file')
+      .option('-f, --filter [filter]', 'Define filter to use on Steam news')  
 
 
 Where userid is a user's steamcommunity id and filepath is the save path of the RSS file.
